@@ -11,6 +11,112 @@
 // @grant        GM_unregisterMenuCommand
 // ==/UserScript==
 
+/*
+(async function() {
+    'use strict';
+
+    // ---------- Load whitelist from GM storage ----------
+    const whitelist = await GM_getValue('whitelist', []);
+    if (whitelist.includes(window.location.hostname)) {
+        console.log('Link Cleaner: site whitelisted, skipping');
+        return;
+    }
+
+    // ---------- Clean a URL by removing query and hash ----------
+    function cleanUrl(urlStr) {
+        try {
+            const url = new URL(urlStr);
+            // Only modify http/https links
+            if (!url.protocol.startsWith('http')) return urlStr;
+
+            // Remove search (query) and hash
+            url.search = '';
+            url.hash = '';
+
+            return url.toString();
+        } catch {
+            return urlStr; // keep original if URL is invalid
+        }
+    }
+
+    // ---------- Process a single anchor ----------
+    function processLink(link) {
+        if (link.hasAttribute('data-linkcleaned')) return;
+
+        const originalHref = link.href;
+        if (!originalHref) return;
+
+        const cleaned = cleanUrl(originalHref);
+        if (cleaned !== originalHref) {
+            link.href = cleaned;
+
+            // Add/append to the title attribute for hover indication
+            const originalTitle = link.title || '';
+            const notice = ` (cleaned by Link Cleaner – original: ${originalHref})`;
+            link.title = originalTitle + notice;
+        }
+
+        // Mark as processed (even if unchanged) to avoid re‑checking
+        link.setAttribute('data-linkcleaned', 'true');
+    }
+
+    // ---------- Process all existing links ----------
+    function processAllLinks() {
+        document.querySelectorAll('a:not([data-linkcleaned])').forEach(processLink);
+    }
+
+    // ---------- Watch for dynamically added links ----------
+    const observer = new MutationObserver(mutations => {
+        for (const mutation of mutations) {
+            if (mutation.addedNodes.length) {
+                for (const node of mutation.addedNodes) {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        // Direct anchor
+                        if (node.tagName === 'A' && !node.hasAttribute('data-linkcleaned')) {
+                            processLink(node);
+                        }
+                        // Anchors inside the added subtree
+                        if (node.querySelectorAll) {
+                            node.querySelectorAll('a:not([data-linkcleaned])').forEach(processLink);
+                        }
+                    }
+                }
+            }
+        }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Initial run
+    processAllLinks();
+
+    // ---------- Menu commands for whitelist management (placeholder for a UI) ----------
+    GM_registerMenuCommand('Show current whitelist', async () => {
+        const wl = await GM_getValue('whitelist', []);
+        alert('Whitelist: ' + (wl.length ? wl.join(', ') : 'empty'));
+    });
+
+    GM_registerMenuCommand('Add current site to whitelist', async () => {
+        const host = window.location.hostname;
+        let wl = await GM_getValue('whitelist', []);
+        if (!wl.includes(host)) {
+            wl.push(host);
+            await GM_setValue('whitelist', wl);
+            alert(`Added ${host} to whitelist. Reload page to take effect.`);
+        } else {
+            alert(`${host} is already whitelisted.`);
+        }
+    });
+
+    GM_registerMenuCommand('Clear whitelist', async () => {
+        await GM_setValue('whitelist', []);
+        alert('Whitelist cleared. Reload page to re‑enable cleaning on all sites.');
+    });
+})();
+*/
+
+
+
+
 (async function() {
     'use strict';
 
